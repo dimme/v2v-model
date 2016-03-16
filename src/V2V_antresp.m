@@ -26,8 +26,8 @@ switch channel
     case 4, phiTx = p.phi(2,:); phiRx = p.phi(2,:);
 end
 
-[tmp,idxTx] = min(abs(repmat(angleTx.'/pi*180,1,length(phiTx)) - repmat(phiTx,length(angleTx),1)),[],2);
-[tmp,idxRx] = min(abs(repmat(angleRx.'/pi*180,1,length(phiRx)) - repmat(phiRx,length(angleRx),1)),[],2);
+[~,idxTx] = min(abs(repmat(angleTx.'/pi*180,1,length(phiTx)) - repmat(phiTx,length(angleTx),1)),[],2);
+[~,idxRx] = min(abs(repmat(angleRx.'/pi*180,1,length(phiRx)) - repmat(phiRx,length(angleRx),1)),[],2);
 
 G = p.G_ant(idxTx) .* p.G_ant(idxRx);
     
