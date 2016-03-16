@@ -191,7 +191,6 @@ for t = p.T
         eval( sprintf( 'fr%09d.t = p.T(ctr_t-p.chunksize+1);', floor(ctr_t/p.chunksize)) );
         save_cell{chunk, 1} = sprintf( 'fr%09d', floor(ctr_t/p.chunksize) );
         save_cell{chunk, 2} = eval(sprintf( 'fr%09d', floor(ctr_t/p.chunksize) ));
-        % save( '-append', p.filename, sprintf( 'fr%09d', floor(ctr_t/p.chunksize) ) );
         eval( sprintf( 'clear(''fr%09d'')', floor(ctr_t/p.chunksize)) );
         H = zeros(p.chunksize,p.N_Rx*p.N_Tx,length(p.F));
     end
