@@ -1,5 +1,4 @@
 function V2V_model( p )
-%test
 % V2V_model  --- Optimised Vehicle-to-Vehicle model
 % 
 % Based on the C2C model of Johan Karedal, Lund University, Sweden
