@@ -34,17 +34,15 @@ else
 end
         
 
-% Radio parameters
-p.dt = 0.3072e-3; %.01;                     % Measured value 0.3072e-3;
-% p.blocksize = 64;
-% p.T_jump = 250;
-p.Tmax = 0.5;                         % Measured value 10 s250
-p.T = 0:p.dt:p.Tmax;
-% p.T = repmat(0:dt:dt*(blocksize-1),1,(ceil(Tmax/(T_jump*dt)))) + reshape(repmat(T_jump*dt*(0:ceil(Tmax/(T_jump*dt))-1),blocksize,1),1,blocksize*ceil(Tmax/(T_jump*dt)));
+%% Radio parameters
+% dt    Measured value 0.3072e-3;
+% Tmax  Measured value 10 s250
+p.dt    = 0.3072e-3; %.01;
+p.Tmax  = 0.5;
+p.T     = 0:p.dt:p.Tmax;
+p.F     = (5.08:0.01/32:5.32)*1e9;
 
-p.F = (5.08:0.01/32:5.32)*1e9;
-
-% Geometry limits    - geometric coordinates organized as matrices "x" with {x_coord ycoord} as rows
+%% Geometry limits    - geometric coordinates organized as matrices "x" with {x_coord ycoord} as rows
 p.xmin = [-250 0];
 p.xmax = [250 250];
 p.w_road = 17;            % Width of road
@@ -54,6 +52,7 @@ p.y_sigma_SD = 3;         % Standard deviation of SD position y-coordinates
 p.y_m_D = 11;             % Distance from center of road to first value of diffuse scattering positions
 p.w_D = 5;                % Width of diffuse scattering band
 
+%% Statistics
 % Scatterer densities
 p.chi_SD = 0.005;
 p.chi_MD = 0.005;
@@ -72,8 +71,6 @@ p.sigma_v_MD = 2;
 p.G0_LOS = -30;                                                       p.G0_D = 100;
 
 % Implementation parameters
-% p.d_win = 1;
-% p.d_samp = .25;
 p.L_filter = 500;
 
 % Time, frequency vectors etc.
@@ -94,10 +91,10 @@ p.phi(2,:) = [314:2:358 0:2:312];
 p.phi(3,:) = [44:2:358 0:2:42];
 p.phi(4,:) = [134:2:358 0:2:132];
 
-p.xTx0 = [0 0 % Tx initial position vector [xcoord,ycoord], el 1
-    .09 0];                       %                                           el 2
-p.xRx0 = [20 0                       % Rx    "        "      "          "
-    20.09 0];
+p.xTx0 = [ 0.00  0.00 % Tx initial position vector [xcoord,ycoord], el 1
+           0.09  0.00];                       %                                           el 2
+p.xRx0 = [20.00  0.00                       % Rx    "        "      "          "
+          20.09  0.00];
 p.N_Tx = 2;
 p.N_Rx = 2;
 p.vTx = repmat([90 0],p.N_Tx,1)/3.6;                   % Tx velocity vector [xcoord,ycoord]
