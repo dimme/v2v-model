@@ -18,7 +18,9 @@
 
 function p = V2V_model_params( dir )
 
-p.filename = 'V2V_model_output.mat';
+rootDir = fullfile(fileparts(fileparts(which(mfilename))));
+
+p.filename = fullfile(rootDir,'V2V_model_output.mat');
 p.chunksize = 10;
 
 if nargin == 1,
@@ -84,8 +86,8 @@ p.nu = ((0:length(p.T)-1)/p.dt/(length(p.T))); p.nu = p.nu-p.nu(end)/2;
 
 % Antenna patterns
 Eaz = [];
-load('../res/antenna/Eaz.mat');
-[slask,ind_max] = max(abs(Eaz));
+load(fullfile(rootDir,'res','antenna','Eaz.mat'));
+[~,ind_max] = max(abs(Eaz));
 p.G_ant = single([Eaz(ind_max:end) Eaz(1:ind_max-1)]);
 p.phi(1,:) = [224:2:358 0:2:222];
 p.phi(2,:) = [314:2:358 0:2:312];
@@ -127,17 +129,17 @@ p.xSD = [(p.xmax(1)-p.xmin(1))*rand(p.N_SD/2,1)+p.xmin(1) p.y_sigma_SD*randn(p.N
 p.xD = [(p.xmax(1)-p.xmin(1))*rand(p.N_D/2,1)+p.xmin(1) p.w_D*rand(p.N_D/2,1)+(p.w_road*(p.NbrLanes-1)/2/p.NbrLanes)+p.y_m_D
     (p.xmax(1)-p.xmin(1))*rand(p.N_D/2,1)+p.xmin(1) -p.w_D*rand(p.N_D/2,1)+(p.w_road*(p.NbrLanes-1)/2/p.NbrLanes)-p.y_m_D];
 
-p.sigma_LS_LOS = abs(sqrt(p.mu_sigma2_LOS/2)*(randn+j*randn)).^2;
-p.d05_LOS = p.d50_min_LOS + abs(sqrt(p.mu_d50_LOS/2)*(randn+j*randn)).^2;
+p.sigma_LS_LOS = abs(sqrt(p.mu_sigma2_LOS/2)*(randn+1j*randn)).^2;
+p.d05_LOS = p.d50_min_LOS + abs(sqrt(p.mu_d50_LOS/2)*(randn+1j*randn)).^2;
 
-p.sigma_LS_MD = abs(sqrt(p.mu_sigma2_MD/2).*(randn(p.N_MD,1)+j*randn(p.N_MD,1))).^2;
-p.d05_MD = p.d50_min_MD + abs(sqrt(p.mu_d50_MD/2).*(randn(p.N_MD,1)+j*randn(p.N_MD,1))).^2;
+p.sigma_LS_MD = abs(sqrt(p.mu_sigma2_MD/2).*(randn(p.N_MD,1)+1j*randn(p.N_MD,1))).^2;
+p.d05_MD = p.d50_min_MD + abs(sqrt(p.mu_d50_MD/2).*(randn(p.N_MD,1)+1j*randn(p.N_MD,1))).^2;
 p.n_PL_MD = p.sigma_n_MD*randn(p.N_MD,1) + p.m_n_MD; p.n_PL_MD(p.n_PL_MD < p.n_min_MD) = p.n_min_MD; p.n_PL_MD(p.n_PL_MD > p.n_max_MD) = p.n_max_MD;
 p.G0_MD = -100+24*p.n_PL_MD;
 p.phi_MD = 2*pi*rand(p.N_MD,1);
 
-p.sigma_LS_SD = abs(sqrt(p.mu_sigma2_SD/2).*(randn(p.N_SD,1)+j*randn(p.N_SD,1))).^2;
-p.d05_SD = p.d50_min_SD + abs(sqrt(p.mu_d50_SD/2).*(randn(p.N_SD,1)+j*randn(p.N_SD,1))).^2;
+p.sigma_LS_SD = abs(sqrt(p.mu_sigma2_SD/2).*(randn(p.N_SD,1)+1j*randn(p.N_SD,1))).^2;
+p.d05_SD = p.d50_min_SD + abs(sqrt(p.mu_d50_SD/2).*(randn(p.N_SD,1)+1j*randn(p.N_SD,1))).^2;
 p.n_PL_SD = p.sigma_n_SD*randn(p.N_SD,1) + p.m_n_SD; p.n_PL_SD(p.n_PL_SD < p.n_min_SD) = p.n_min_SD; p.n_PL_SD(p.n_PL_SD > p.n_max_SD) = p.n_max_SD;
 p.G0_SD = -100+24*p.n_PL_SD;
 p.phi_SD = 2*pi*rand(p.N_SD,1);

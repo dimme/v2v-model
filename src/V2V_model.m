@@ -209,4 +209,5 @@ if idx_t ~= p.chunksize,
     eval( sprintf( 'clear(''fr%09d'')', ceil(ctr_t/p.chunksize)) );
 end
 
+fprintf('Finished! Output saved to: %s\n', p.filename)
 
