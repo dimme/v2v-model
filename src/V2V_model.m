@@ -197,7 +197,7 @@ for t = p.T
     
 end
 
-c = cell2struct(save_cell(:,2), save_cell(1:end-1,1));
+c = cell2struct(save_cell(:,2), save_cell(:,1));
 save('-append', p.filename, '-struct', 'c');
 
 % do the last write if it hasn't been done before.
