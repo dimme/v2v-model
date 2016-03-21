@@ -59,16 +59,37 @@ p.chi_MD = 0.005;
 p.chi_D = 1;
 
 % Distribution parameters for model parameters
-p.mu_sigma2_LOS = 6.8;    p.mu_sigma2_MD = 9.4;   p.mu_sigma2_SD = 6.3;
-p.mu_d50_LOS = 7.2;       p.mu_d50_MD = 5.4;    p.mu_d50_SD = 4.9;
-p.d50_min_LOS = 4.4;      p.d50_min_MD = 1.1;   p.d50_min_SD = 1.0;
-p.n_PL_LOS = 1.6;         p.m_n_MD = 1.9;       p.m_n_SD = 1.0;           p.n_PL_D = 8;
-p.sigma_n_MD = 2.5;   p.sigma_n_SD = 3.1;
-p.n_min_MD = 0;       p.n_min_SD = 0;
-p.n_max_MD = 3.5;       p.n_max_SD = 3.5;
+p.mu_sigma2_LOS = 6.8;
+p.mu_sigma2_MD = 9.4;
+p.mu_sigma2_SD = 6.3;
+
+p.mu_d50_LOS = 7.2;
+p.mu_d50_MD = 5.4;
+p.mu_d50_SD = 4.9;
+
+p.d50_min_LOS = 4.4;
+p.d50_min_MD = 1.1;
+p.d50_min_SD = 1.0;
+
+p.n_PL_LOS = 1.6;
+p.n_PL_D = 8;
+
+p.m_n_MD = 1.9;
+p.m_n_SD = 1.0;
+
+p.sigma_n_MD = 2.5;
+p.sigma_n_SD = 3.1;
+
+p.n_min_MD = 0;
+p.n_min_SD = 0;
+p.n_max_MD = 3.5;
+p.n_max_SD = 3.5;
+
 p.m_v_MD = 90;
 p.sigma_v_MD = 2;
-p.G0_LOS = -30;                                                       p.G0_D = 100;
+
+p.G0_LOS = -30;
+p.G0_D = 100;
 
 % Implementation parameters
 p.L_filter = 500;
@@ -126,15 +147,18 @@ p.xSD = [(p.xmax(1)-p.xmin(1))*rand(p.N_SD/2,1)+p.xmin(1) p.y_sigma_SD*randn(p.N
 p.xD = [(p.xmax(1)-p.xmin(1))*rand(p.N_D/2,1)+p.xmin(1) p.w_D*rand(p.N_D/2,1)+(p.w_road*(p.NbrLanes-1)/2/p.NbrLanes)+p.y_m_D
     (p.xmax(1)-p.xmin(1))*rand(p.N_D/2,1)+p.xmin(1) -p.w_D*rand(p.N_D/2,1)+(p.w_road*(p.NbrLanes-1)/2/p.NbrLanes)-p.y_m_D];
 
+% LOS
 p.sigma_LS_LOS = abs(sqrt(p.mu_sigma2_LOS/2)*(randn+1j*randn)).^2;
 p.d05_LOS = p.d50_min_LOS + abs(sqrt(p.mu_d50_LOS/2)*(randn+1j*randn)).^2;
 
+% Mobile Discrete
 p.sigma_LS_MD = abs(sqrt(p.mu_sigma2_MD/2).*(randn(p.N_MD,1)+1j*randn(p.N_MD,1))).^2;
 p.d05_MD = p.d50_min_MD + abs(sqrt(p.mu_d50_MD/2).*(randn(p.N_MD,1)+1j*randn(p.N_MD,1))).^2;
 p.n_PL_MD = p.sigma_n_MD*randn(p.N_MD,1) + p.m_n_MD; p.n_PL_MD(p.n_PL_MD < p.n_min_MD) = p.n_min_MD; p.n_PL_MD(p.n_PL_MD > p.n_max_MD) = p.n_max_MD;
 p.G0_MD = -100+24*p.n_PL_MD;
 p.phi_MD = 2*pi*rand(p.N_MD,1);
 
+% Static Discrete
 p.sigma_LS_SD = abs(sqrt(p.mu_sigma2_SD/2).*(randn(p.N_SD,1)+1j*randn(p.N_SD,1))).^2;
 p.d05_SD = p.d50_min_SD + abs(sqrt(p.mu_d50_SD/2).*(randn(p.N_SD,1)+1j*randn(p.N_SD,1))).^2;
 p.n_PL_SD = p.sigma_n_SD*randn(p.N_SD,1) + p.m_n_SD; p.n_PL_SD(p.n_PL_SD < p.n_min_SD) = p.n_min_SD; p.n_PL_SD(p.n_PL_SD > p.n_max_SD) = p.n_max_SD;

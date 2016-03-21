@@ -55,6 +55,7 @@ title('Initial geometry','fontsize',14,'fontname','times')
 xRx0 = xRxsav;
 xTx0 = xTxsav;
 
+drawnow
 
 %%
 % figure;

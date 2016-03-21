@@ -45,37 +45,28 @@ save(p.filename,'p');
 
 fprintf('Determining distance vectors ... \r\n');
 
+n_T = length(p.T);
+
 % Preliminary matrix/vector stacking
-d_LOS    = zeros(p.N_Tx*p.N_Rx,  length(p.T));
-d_MD     = zeros(p.N_Tx*p.N_Rx,  p.N_MD,     length(p.T));
-d_SD     = zeros(p.N_Tx*p.N_Rx,  p.N_SD,     length(p.T));
-d_D      = zeros(p.N_Tx*p.N_Rx,  p.N_D,      length(p.T));
+d_LOS    = zeros(p.N_Tx*p.N_Rx,  n_T);
+d_MD     = zeros(p.N_Tx*p.N_Rx,  p.N_MD,     n_T);
+d_SD     = zeros(p.N_Tx*p.N_Rx,  p.N_SD,     n_T);
+d_D      = zeros(p.N_Tx*p.N_Rx,  p.N_D,      n_T);
 
-thTxRx   = zeros(p.N_Tx*p.N_Rx,  length(p.T), 'single');
-thTxMD   = zeros(p.N_Tx*p.N_Rx,  p.N_MD, length(p.T), 'single');
-thTxSD   = zeros(p.N_Tx*p.N_Rx,  p.N_SD, length(p.T), 'single');
-thTxD    = zeros(p.N_Tx*p.N_Rx,  p.N_D,  length(p.T), 'single');
+thTxRx   = zeros(p.N_Tx*p.N_Rx,  n_T, 'single');
+thTxMD   = zeros(p.N_Tx*p.N_Rx,  p.N_MD, n_T, 'single');
+thTxSD   = zeros(p.N_Tx*p.N_Rx,  p.N_SD, n_T, 'single');
+thTxD    = zeros(p.N_Tx*p.N_Rx,  p.N_D,  n_T, 'single');
 
-thRxMD   = zeros(p.N_Tx*p.N_Rx,  p.N_MD, length(p.T), 'single');
-thRxSD   = zeros(p.N_Tx*p.N_Rx,  p.N_SD, length(p.T), 'single');
-thRxD    = zeros(p.N_Tx*p.N_Rx,  p.N_D,  length(p.T), 'single');
+thRxMD   = zeros(p.N_Tx*p.N_Rx,  p.N_MD, n_T, 'single');
+thRxSD   = zeros(p.N_Tx*p.N_Rx,  p.N_SD, n_T, 'single');
+thRxD    = zeros(p.N_Tx*p.N_Rx,  p.N_D,  n_T, 'single');
 
-row_xTx0 = reshape(p.xTx0,  numel(p.xTx0), 1);
-row_vTx  = reshape(p.vTx,   numel(p.vTx),  1);
-row_xRx0 = reshape(p.xRx0,  numel(p.xRx0), 1);
-row_vRx  = reshape(p.vRx,   numel(p.vRx),  1);
-row_xMD0 = reshape(p.xMD0,  numel(p.xMD0), 1);
-row_vMD  = reshape(p.vMD,   numel(p.vMD),  1);
-row_xSD  = reshape(p.xSD,   numel(p.xSD),  1);
-row_xD   = reshape(p.xD,    numel(p.xD),   1);
-
-xTx      = repmat(row_xTx0, 1, length(p.T)) + row_vTx*p.T;
-xRx      = repmat(row_xRx0, 1, length(p.T)) + row_vRx*p.T;
-xMD      = repmat(row_xMD0, 1, length(p.T)) + row_vMD*p.T;
-xSD      = repmat(row_xSD,  1, length(p.T));
-xD       = repmat(row_xD,   1, length(p.T));
-
-clear row_*; % optimize mem usage
+xTx      = repmat(p.xTx0(:), 1, n_T) + p.vTx(:)*p.T;
+xRx      = repmat(p.xRx0(:), 1, n_T) + p.vRx(:)*p.T;
+xMD      = repmat(p.xMD0(:), 1, n_T) + p.vMD(:)*p.T;
+xSD      = repmat(p.xSD(:),  1, n_T);
+xD       = repmat(p.xD(:),   1, n_T);
 
 % Determining distances and angles
 ctr_ch = 0;
@@ -152,11 +143,11 @@ for t = p.T
         sel = mod(el_time,60); el_time = (el_time-sel)/60;
         mel = mod(el_time,60); hel = (el_time-mel)/60;
 
-        fprintf( '%3.4f %% completed, %02.f:%02.f:%02.f elapsed, %02.f:%02.f:%02.f to go...\r',ctr_t / length(p.T) * 100, hel,mel,sel, htg,mtg,floor(stg) );
+        fprintf( '%3.2f%% completed, %02.f:%02.f:%02.f elapsed, %02.f:%02.f:%02.f to go\r', ctr_t/length(p.T)*100, hel,mel,sel, htg,mtg,floor(stg) );
     end
 
     % overcome the MATLAB non-zero indexing
-    if idx_t == 0, idx_t = p.chunksize; end;
+    if idx_t == 0; idx_t = p.chunksize; end;
         
     %% Add LOS component
     for ctr_ch = 1:p.N_Rx*p.N_Tx;
@@ -178,8 +169,8 @@ for t = p.T
             * exp(-1j*2*pi/p.c*d_MD(ctr_ch,:,ctr_t).'*p.F),-1);
         % Diffuse paths
         H(idx_t, ctr_ch, :) = H(idx_t, ctr_ch, :) + ...
-            shiftdim( ( V2V_antresp(p, ctr_ch, thTxD(ctr_ch, :, ctr_t),thRxD(ctr_ch, :, ctr_t)).* ... % SD
-            10.^(p.G0_D/20) .* (1/sqrt(p.N_D)) ./d_D(ctr_ch,:,ctr_t).^(p.n_PL_D/2) ) ...
+            shiftdim( ( V2V_antresp(p, ctr_ch, thTxD(ctr_ch, :, ctr_t),thRxD(ctr_ch, :, ctr_t)).* ... % D
+            10.^(p.G0_D/20) * (1/sqrt(p.N_D)) ./d_D(ctr_ch,:,ctr_t).^(p.n_PL_D/2) ) ...
             * exp(-1j*2*pi/p.c* d_D(ctr_ch,:,ctr_t).'*p.F), -1);
     end
     
@@ -196,6 +187,7 @@ for t = p.T
     end
     
 end
+fprintf('100%% completed\n');
 
 c = cell2struct(save_cell(:,2), save_cell(:,1));
 save('-append', p.filename, '-struct', 'c');
