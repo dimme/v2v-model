@@ -24,9 +24,7 @@ function [G_LS_LOS, G_LS_MD, G_LS_SD] = V2V_gen_LS_fading( p, d_LOS, d_MD, d_SD 
 disp('Generate LS fading')
 
 disp('   ...for LOS...')
-d_LOS_mean = d_LOS(1,:);
-d_diff_LOS = [0 d_LOS_mean]-[d_LOS_mean 0]; d_diff_LOS = d_diff_LOS(2:end-1);
-d_sim_LOS = [0 cumsum(abs(d_diff_LOS))];                             % Correlated data sampled at d_samp_LOS, resample to d_sim_LOS
+d_sim_LOS = [0 cumsum(abs(diff(d_LOS(1,:))))];                             % Correlated data sampled at d_samp_LOS, resample to d_sim_LOS
 d_samp_LOS = (0:p.L_filter-1)/(p.L_filter-1)*ceil(d_sim_LOS(end));
 G_LS_LOS_uncorr = randn(length(d_samp_LOS),1);
 R_LOS_row = p.sigma_LS_LOS^2*exp(-log(2)/p.d05_LOS^2*(d_samp_LOS).^2);
