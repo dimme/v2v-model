@@ -1,3 +1,4 @@
+function p = V2V_model_params( dir )
 % V2V_model_params 
 %       generates a parameter set for the optimised V2V model
 %       
@@ -15,8 +16,6 @@
 
 % History:
 % 2008-03-13 NCZ: created
-
-function p = V2V_model_params( dir )
 
 rootDir = fullfile(fileparts(fileparts(which(mfilename))));
 

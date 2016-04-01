@@ -1,3 +1,4 @@
+function [G_LS_LOS, G_LS_MD, G_LS_SD] = V2V_gen_LS_fading( p, d_LOS, d_MD, d_SD )
 % V2V_gen_LS_fading
 %
 % Subroutine for V2V model, generates the LS fading. 
@@ -18,8 +19,6 @@
 
 % History:
 % 2008-03-13 NCZ: created
-
-function [G_LS_LOS, G_LS_MD, G_LS_SD] = V2V_gen_LS_fading( p, d_LOS, d_MD, d_SD )
 
 disp('Generate LS fading')
 

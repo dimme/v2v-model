@@ -1,3 +1,4 @@
+function G = V2V_antresp( p, channel, angleTx, angleRx )
 % V2V_antresp ... returns the antenna respose for a certain Tx AND Rx angle
 %
 % Parameters:
@@ -9,11 +10,9 @@
 %
 % Returns:
 % Antenna gain vector for the combined Tx/Rx angles
-
+%
 % History:
 % 2008-03-13 NCZ: created
-
-function G = V2V_antresp( p, channel, angleTx, angleRx )
 
 % Select the angular indices;    
 switch channel
