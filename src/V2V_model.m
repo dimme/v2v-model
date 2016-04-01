@@ -52,7 +52,6 @@ d_LOS    = zeros(p.N_Tx*p.N_Rx,  n_T);
 d_MD     = zeros(p.N_Tx*p.N_Rx,  p.N_MD,     n_T);
 d_SD     = zeros(p.N_Tx*p.N_Rx,  p.N_SD,     n_T);
 d_D      = zeros(p.N_Tx*p.N_Rx,  p.N_D,      n_T);
-
 thTxRx   = zeros(p.N_Tx*p.N_Rx,  n_T, 'single');
 thTxMD   = zeros(p.N_Tx*p.N_Rx,  p.N_MD, n_T, 'single');
 thTxSD   = zeros(p.N_Tx*p.N_Rx,  p.N_SD, n_T, 'single');
@@ -116,6 +115,8 @@ for ch2 = 1:p.N_Rx % for all channels
         end
     end
 end
+
+if 0; plotTheoTimeDelay(p, d_LOS, d_MD, d_SD); end
 
 %% Generate LS fading
 
