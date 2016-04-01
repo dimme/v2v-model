@@ -123,7 +123,7 @@ if 0; plotTheoTimeDelay(p, d_LOS, d_MD, d_SD); end
 [G_LS_LOS, G_LS_MD, G_LS_SD] = V2V_gen_LS_fading( p, d_LOS, d_MD, d_SD );
 
 %% Generate channel matrix
-disp('Generate channel matrix ...')
+fprintf('\nGenerate channel matrix ...\n')
 ctr_t = 0;
 H = zeros(p.chunksize,p.N_Rx*p.N_Tx,length(p.F));
 chunk = 0;
@@ -181,8 +181,12 @@ for t = p.T
     
 end
 cpb.stop();
-fprintf('\n   ... saving channel matrix ...')
+
 c = cell2struct(save_cell(:,2), save_cell(:,1));
+
+hSize = whos('c');
+
+fprintf('\n   ... saving channel matrix (compressing %4.2f MB) ...', hSize.bytes*1e-6);
 save('-append', p.filename, '-struct', 'c');
 
 % do the last write if it hasn't been done before.
@@ -194,5 +198,6 @@ if idx_t ~= p.chunksize,
     eval( sprintf( 'clear(''fr%09d'')', ceil(ctr_t/p.chunksize)) );
 end
 
-fprintf('\nFinished! Output saved to:\n\t%s\n', p.filename)
+MyFileInfo = dir(p.filename);
+fprintf('\nFinished! Output saved to:\n\t%s (%4.2f MB)\n', p.filename, MyFileInfo.bytes*1e-6)
 
