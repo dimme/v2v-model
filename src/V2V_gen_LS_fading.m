@@ -82,7 +82,7 @@ for ctr_LOS = 2:length(d_sim_LOS)
         x2 = xtemp + (d_samp_LOS(2) - d_samp_LOS(1));
         y2 = G_LS_LOS_eqd(abs(d_samp_LOS-x2)<1e-6);
     end
-    G_LS_LOS(ctr_LOS) = linear_interpolation(x1,y1,x2,y2,d_sim_LOS(ctr_LOS));
+    G_LS_LOS(ctr_LOS) = interp1([x1 x2], [y1 y2], d_sim_LOS(ctr_LOS), 'linear', 'extrap');
 end
 
 disp('   ...mobile discrete scatterers...')
@@ -103,7 +103,7 @@ for ctr_MD = 1:p.N_MD
             x2 = xtemp + (d_samp_MD(2) - d_samp_MD(1));
             y2 = G_LS_MD_eqd(ctr_MD,abs(d_samp_MD-x2)<1e-6);
         end
-        G_LS_MD(ctr_MD,ctr_d) = linear_interpolation(x1,y1,x2,y2,d_sim_MD(ctr_d));
+        G_LS_MD(ctr_MD,ctr_d) = interp1([x1 x2], [y1 y2], d_sim_MD(ctr_d), 'linear', 'extrap');
     end
 end
 
@@ -125,6 +125,6 @@ for ctr_SD = 1:p.N_SD
             x2 = xtemp + (d_samp_SD(2) - d_samp_SD(1));
             y2 = G_LS_SD_eqd(ctr_SD,abs(d_samp_SD-x2)<1e-6);
         end
-        G_LS_SD(ctr_SD,ctr_d) = linear_interpolation(x1,y1,x2,y2,d_sim_SD(ctr_d));
+        G_LS_SD(ctr_SD,ctr_d) = interp1([x1 x2], [y1 y2],d_sim_SD(ctr_d), 'linear', 'extrap');
     end
 end
