@@ -122,34 +122,26 @@ end
 [G_LS_LOS, G_LS_MD, G_LS_SD] = V2V_gen_LS_fading( p, d_LOS, d_MD, d_SD );
 
 %% Generate channel matrix
-
+disp('Generate channel matrix ...')
 ctr_t = 0;
 H = zeros(p.chunksize,p.N_Rx*p.N_Tx,length(p.F));
 chunk = 0;
 save_cell = cell(floor(length(p.T)/p.chunksize), 2);
 
-tic;
+cpb = CreateProgressBar(length(p.T));
+cpb.start();
 for t = p.T
     ctr_t = ctr_t + 1;
     idx_t = mod(ctr_t,p.chunksize);
     
-    if idx_t == 0
-        % For displaying the remaining time
-        el_time = toc;
-        ttg = (el_time/ctr_t*length(p.T) - el_time);
-        stg = mod(ttg,60); ttg = (ttg-stg)/60;
-        mtg = mod(ttg,60); htg = (ttg-mtg)/60;
-
-        sel = mod(el_time,60); el_time = (el_time-sel)/60;
-        mel = mod(el_time,60); hel = (el_time-mel)/60;
-
-        fprintf( '%3.2f%% completed, %02.f:%02.f:%02.f elapsed, %02.f:%02.f:%02.f to go\r', ctr_t/length(p.T)*100, hel,mel,sel, htg,mtg,floor(stg) );
-    end
-
+    userText = sprintf('Progress: [%d/%d]', ctr_t, length(p.T)); 
+    cpb.setValue(ctr_t); % update progress value 
+    cpb.setText(userText) % update user text 
+    
     % overcome the MATLAB non-zero indexing
     if idx_t == 0; idx_t = p.chunksize; end;
         
-    %% Add LOS component
+    % Add LOS component
     for ctr_ch = 1:p.N_Rx*p.N_Tx;
 
         % LOS path
@@ -187,8 +179,8 @@ for t = p.T
     end
     
 end
-fprintf('100%% completed\n');
-
+cpb.stop();
+fprintf('\n   ... saving channel matrix ...')
 c = cell2struct(save_cell(:,2), save_cell(:,1));
 save('-append', p.filename, '-struct', 'c');
 
@@ -201,5 +193,5 @@ if idx_t ~= p.chunksize,
     eval( sprintf( 'clear(''fr%09d'')', ceil(ctr_t/p.chunksize)) );
 end
 
-fprintf('Finished! Output saved to: %s\n', p.filename)
+fprintf('\nFinished! Output saved to:\n\t%s\n', p.filename)
 
