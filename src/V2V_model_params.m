@@ -135,16 +135,12 @@ p.N_D = p.chi_D*(p.xmax(1)-p.xmin(1));
 
 p.xMD0 = [(p.xmax(1)-p.xmin(1))*rand(p.N_MD,1)+p.xmin(1) p.w_road/p.NbrLanes*(ceil(p.NbrLanes*rand(p.N_MD,1))-1)];
 p.vMD = [p.sigma_v_MD*randn(p.N_MD,1)+p.m_v_MD zeros(p.N_MD,1)]/3.6;
-for ctr_MD = 1:p.N_MD
-    if p.xMD0(ctr_MD,2)/p.w_road >= .5 % Other lane => other direction
-        p.vMD(ctr_MD,1) = - p.vMD(ctr_MD,1);
-    end
-end
+p.vMD(p.xMD0(:,2)/p.w_road >= .5, 1) = - p.vMD(p.xMD0(:,2)/p.w_road >= .5,1);
 
 p.xSD = [(p.xmax(1)-p.xmin(1))*rand(p.N_SD/2,1)+p.xmin(1) p.y_sigma_SD*randn(p.N_SD/2,1)+(p.w_road*(p.NbrLanes-1)/2/p.NbrLanes)+p.y_m_SD
-    (p.xmax(1)-p.xmin(1))*rand(p.N_SD/2,1)+p.xmin(1) p.y_sigma_SD*randn(p.N_SD/2,1)+(p.w_road*(p.NbrLanes-1)/2/p.NbrLanes)-p.y_m_SD];
-p.xD = [(p.xmax(1)-p.xmin(1))*rand(p.N_D/2,1)+p.xmin(1) p.w_D*rand(p.N_D/2,1)+(p.w_road*(p.NbrLanes-1)/2/p.NbrLanes)+p.y_m_D
-    (p.xmax(1)-p.xmin(1))*rand(p.N_D/2,1)+p.xmin(1) -p.w_D*rand(p.N_D/2,1)+(p.w_road*(p.NbrLanes-1)/2/p.NbrLanes)-p.y_m_D];
+         (p.xmax(1)-p.xmin(1))*rand(p.N_SD/2,1)+p.xmin(1) p.y_sigma_SD*randn(p.N_SD/2,1)+(p.w_road*(p.NbrLanes-1)/2/p.NbrLanes)-p.y_m_SD];
+p.xD = [ (p.xmax(1)-p.xmin(1))*rand(p.N_D/2, 1)+p.xmin(1)  p.w_D *      rand(p.N_D/2,1)+ (p.w_road*(p.NbrLanes-1)/2/p.NbrLanes)+p.y_m_D
+         (p.xmax(1)-p.xmin(1))*rand(p.N_D/2, 1)+p.xmin(1) -p.w_D *      rand(p.N_D/2,1)+ (p.w_road*(p.NbrLanes-1)/2/p.NbrLanes)-p.y_m_D];
 
 % LOS
 p.sigma_LS_LOS = abs(sqrt(p.mu_sigma2_LOS/2)*(randn+1j*randn)).^2;
